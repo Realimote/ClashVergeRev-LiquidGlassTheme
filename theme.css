@@ -1,0 +1,999 @@
+/* ============================================================
+   Clash Verge Rev · 液态玻璃主题 (Liquid Glass)
+   ------------------------------------------------------------
+   适用：Clash Verge Rev v2.5.x（深色模式）
+   用法：设置 → Verge 基础设置 → 主题设置 → CSS 注入
+         粘贴本文件全部内容并保存；主题模式请切换为「深色」
+   调参：所有可调项都集中在下方 :root 变量区，详见 README.md
+   ============================================================ */
+
+:root {
+  /* ───────────── 壁纸层 ─────────────
+     默认为内置极光渐变，离线可用。
+     换成网络图片：--lg-wallpaper: url("https://example.com/bg.jpg");
+     换成本地图片：需转换为 asset.localhost 地址（见 README） */
+  --lg-wallpaper:
+    radial-gradient(110% 80% at 82% 8%, rgba(43, 91, 168, 0.55) 0%, rgba(43, 91, 168, 0) 60%),
+    radial-gradient(90% 70% at 12% 16%, rgba(94, 60, 153, 0.5) 0%, rgba(94, 60, 153, 0) 62%),
+    radial-gradient(120% 90% at 55% 105%, rgba(11, 95, 115, 0.45) 0%, rgba(11, 95, 115, 0) 60%),
+    linear-gradient(158deg, #0a0e1c 0%, #101a33 48%, #0a1222 100%);
+  --lg-body-bg: #05070d;
+  --lg-wp-blur: 0px; /* 壁纸模糊半径，想让玻璃感更强可试 2px ~ 10px */
+  --lg-wp-saturate: 1.1;
+
+  /* 全局暗色遮罩：0（不压暗）~ 1（全黑），壁纸太亮就调大 */
+  --lg-scrim-top: 0.34;
+  --lg-scrim-bottom: 0.5;
+
+  /* ───────────── 液态色斑（背景流动光晕） ───────────── */
+  --lg-blob-a: rgba(66, 133, 244, 0.36);
+  --lg-blob-b: rgba(147, 90, 255, 0.3);
+  --lg-blob-c: rgba(0, 201, 197, 0.24);
+  --lg-blob-d: rgba(255, 110, 176, 0.2);
+  --lg-blob-opacity: 1; /* 不喜欢流动光晕就设为 0 */
+  --lg-blob-blur: 64px;
+  --lg-blob-motion: 44s; /* 流动周期 */
+
+  /* ───────────── 玻璃材质 ───────────── */
+  --lg-tint: rgba(255, 255, 255, 0.065);
+  --lg-tint-strong: rgba(255, 255, 255, 0.1);
+  --lg-row-bg: rgba(255, 255, 255, 0.045);
+  --lg-hover: rgba(255, 255, 255, 0.1);
+  --lg-active: rgba(255, 255, 255, 0.16);
+  /* 对角高光：模拟玻璃表面反光 */
+  --lg-sheen: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0.015) 100%
+  );
+  --lg-highlight: rgba(255, 255, 255, 0.28);
+  --lg-highlight-soft: rgba(255, 255, 255, 0.07);
+
+  --lg-border: rgba(255, 255, 255, 0.2);
+  --lg-border-soft: rgba(255, 255, 255, 0.11);
+  --lg-border-hover: rgba(255, 255, 255, 0.34);
+
+  --lg-radius: 18px;
+  --lg-radius-sm: 12px;
+
+  --lg-shadow: 0 10px 34px rgba(0, 0, 0, 0.34);
+  --lg-shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.22);
+
+  /* ───────────── 文本 ───────────── */
+  --lg-text: rgba(255, 255, 255, 0.96);
+  --lg-text-dim: rgba(255, 255, 255, 0.76);
+  --lg-tshadow: 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 5px rgba(0, 0, 0, 0.22);
+  --lg-tshadow-strong: 0 1px 3px rgba(0, 0, 0, 0.72), 0 0 9px rgba(0, 0, 0, 0.3);
+
+  /* ───────────── 强调色 ─────────────
+     自动跟随应用主色（设置 → 主题设置 → 主色），
+     下方 rgba 值仅为不支持 color-mix 的兜底 */
+  --lg-accent: var(--primary-main, #5ab0f8);
+  --lg-accent-fill: rgba(90, 176, 248, 0.26);
+  --lg-accent-fill: color-mix(in srgb, var(--lg-accent) 26%, transparent);
+  --lg-accent-fill-strong: rgba(90, 176, 248, 0.45);
+  --lg-accent-fill-strong: color-mix(in srgb, var(--lg-accent) 46%, transparent);
+  --lg-accent-border: rgba(90, 176, 248, 0.55);
+  --lg-accent-border: color-mix(in srgb, var(--lg-accent) 55%, transparent);
+  --lg-accent-glow: rgba(90, 176, 248, 0.3);
+  --lg-accent-glow: color-mix(in srgb, var(--lg-accent) 30%, transparent);
+  --lg-accent-text: #7cbdf9;
+  --lg-accent-text: color-mix(in srgb, var(--lg-accent) 65%, #ffffff);
+
+  /* ───────────── 语义色 ───────────── */
+  --lg-success: #3fd3a8;
+  --lg-success-soft: rgba(63, 211, 168, 0.16);
+  --lg-warning: #f5b45c;
+  --lg-warning-soft: rgba(245, 180, 92, 0.16);
+  --lg-error: #ff6b80;
+  --lg-error-soft: rgba(255, 107, 128, 0.16);
+
+  /* ───────────── 控件 ───────────── */
+  --lg-input-bg: rgba(6, 10, 20, 0.34);
+  --lg-chip-bg: rgba(255, 255, 255, 0.1);
+  --lg-sticky-bg: rgba(9, 13, 22, 0.55);
+
+  /* ───────────── 浮层（对话框 / 菜单 / 气泡） ───────────── */
+  --lg-overlay-tint: rgba(13, 17, 29, 0.72);
+  --lg-overlay-blur: 28px;
+  --lg-backdrop: rgba(4, 7, 14, 0.42);
+  --lg-tooltip-bg: rgba(10, 13, 22, 0.92);
+
+  --lg-scrollbar: rgba(255, 255, 255, 0.22);
+  --lg-scrollbar-hover: rgba(255, 255, 255, 0.36);
+
+  /* 接管应用内置变量（!important 用于压过运行时注入的内联变量） */
+  --divider-color: var(--lg-border-soft) !important;
+  --scrollbar-bg: transparent !important;
+  --scrollbar-thumb: var(--lg-scrollbar) !important;
+  --scroller-color: var(--lg-scrollbar) !important;
+}
+
+/* ============================================================
+   一、背景：壁纸 → 液态色斑 → 暗色遮罩
+   ============================================================ */
+
+body {
+  background-color: var(--lg-body-bg) !important;
+  background-image: none !important;
+  opacity: 1 !important;
+}
+
+/* 1. 壁纸层 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -24px;
+  z-index: -3;
+  pointer-events: none;
+  background-image: var(--lg-wallpaper);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  filter: blur(var(--lg-wp-blur)) saturate(var(--lg-wp-saturate));
+}
+
+/* 2. 液态色斑层：缓慢漂移的彩色光晕 */
+@keyframes lg-blobs {
+  0% {
+    transform: translate3d(-2.5%, -1.5%, 0) scale(1.06);
+  }
+  50% {
+    transform: translate3d(2.5%, 2%, 0) scale(1.14);
+  }
+  100% {
+    transform: translate3d(-2%, 1.5%, 0) scale(1.06);
+  }
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -18%;
+  z-index: -2;
+  pointer-events: none;
+  opacity: var(--lg-blob-opacity);
+  background-image:
+    radial-gradient(42% 42% at 22% 28%, var(--lg-blob-a) 0%, transparent 70%),
+    radial-gradient(38% 38% at 78% 20%, var(--lg-blob-b) 0%, transparent 70%),
+    radial-gradient(46% 46% at 64% 82%, var(--lg-blob-c) 0%, transparent 72%),
+    radial-gradient(30% 30% at 30% 76%, var(--lg-blob-d) 0%, transparent 70%);
+  filter: blur(var(--lg-blob-blur));
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body::after {
+    animation: lg-blobs var(--lg-blob-motion) ease-in-out infinite alternate;
+  }
+}
+
+/* 3. 暗色遮罩层：统一压暗背景，保证前景可读 */
+.layout::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(
+    180deg,
+    rgba(4, 7, 15, var(--lg-scrim-top)) 0%,
+    rgba(4, 7, 15, calc(var(--lg-scrim-top) * 0.55)) 45%,
+    rgba(4, 7, 15, var(--lg-scrim-bottom)) 100%
+  );
+}
+
+#initial-loading-overlay {
+  background: var(--lg-body-bg) !important;
+}
+
+/* ============================================================
+   二、主框架透明化：露出下层壁纸
+   ============================================================ */
+
+.layout,
+.layout.MuiPaper-root,
+.layout-content,
+.layout-content__left,
+.layout-content__right,
+.the-bar,
+.the-content,
+.the_titlebar,
+.base-page,
+.base-page > header,
+.base-container,
+.base-container > section,
+.base-content {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.layout,
+.layout.MuiPaper-root {
+  color: var(--lg-text) !important;
+  text-shadow: var(--lg-tshadow);
+}
+
+.layout-content__left {
+  border-right: 1px solid var(--lg-border-soft) !important;
+}
+
+.the_titlebar {
+  border-bottom: 1px solid var(--lg-border-soft) !important;
+}
+
+/* ============================================================
+   三、侧栏：logo / 菜单 / 流量
+   ============================================================ */
+
+.the-logo,
+.the-logo svg,
+.the-logo svg path {
+  color: var(--lg-text) !important;
+  fill: var(--lg-text) !important;
+}
+
+.the-logo {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
+}
+
+.the-menu .MuiListItemButton-root {
+  min-height: 44px;
+  margin: 2px 0;
+  border: 1px solid transparent !important;
+  border-radius: var(--lg-radius) !important;
+  color: var(--lg-text) !important;
+  background: transparent !important;
+  background-image: none !important;
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease !important;
+}
+
+.the-menu .MuiListItemButton-root:hover {
+  background-color: var(--lg-hover) !important;
+  border-color: var(--lg-border-soft) !important;
+}
+
+/* 选中项：主色玻璃 + 光晕 */
+.the-menu .MuiListItemButton-root.Mui-selected,
+.the-menu .MuiListItemButton-root.Mui-selected:hover {
+  border-color: var(--lg-accent-border) !important;
+  background-color: var(--lg-accent-fill) !important;
+  background-image: var(--lg-sheen) !important;
+  box-shadow:
+    0 0 18px var(--lg-accent-glow),
+    inset 0 1px 0 var(--lg-highlight) !important;
+}
+
+.the-menu .MuiListItemIcon-root,
+.the-menu .MuiListItemText-primary {
+  color: var(--lg-text) !important;
+}
+
+.the-menu .MuiListItemText-primary {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  text-shadow: var(--lg-tshadow-strong);
+}
+
+.the-traffic,
+.the-traffic .MuiTypography-root {
+  color: var(--lg-text) !important;
+}
+
+.the-traffic .MuiBox-root {
+  background: transparent !important;
+}
+
+/* ============================================================
+   四、页面头部
+   ============================================================ */
+
+.base-page > header .MuiTypography-root {
+  color: var(--lg-text) !important;
+  font-weight: 700;
+  text-shadow: var(--lg-tshadow-strong);
+}
+
+.base-page > header .MuiButtonGroup-root {
+  overflow: hidden;
+  border: 1px solid var(--lg-border) !important;
+  border-radius: 10px !important;
+  background: var(--lg-tint) !important;
+  background-image: var(--lg-sheen) !important;
+  box-shadow:
+    var(--lg-shadow-soft),
+    inset 0 1px 0 var(--lg-highlight-soft) !important;
+}
+
+.base-page > header .MuiButtonGroup-root .MuiButton-root {
+  min-height: 30px;
+  border-color: var(--lg-border-soft) !important;
+  color: var(--lg-text-dim) !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.base-page > header .MuiButtonGroup-root .MuiButton-root:hover {
+  background-color: var(--lg-hover) !important;
+}
+
+.base-page > header .MuiButtonGroup-root .MuiButton-contained {
+  color: var(--lg-text) !important;
+  background-color: var(--lg-active) !important;
+  background-image: var(--lg-sheen) !important;
+  font-weight: 600;
+}
+
+.base-page > header .MuiButton-root:not(.MuiButtonGroup-root *) {
+  min-height: 30px;
+  border: 1px solid var(--lg-border) !important;
+  border-radius: 10px !important;
+  color: var(--lg-text) !important;
+  background: transparent !important;
+  background-image: none !important;
+  transition: background-color 0.16s ease !important;
+}
+
+.base-page > header .MuiButton-root:not(.MuiButtonGroup-root *):hover {
+  background-color: var(--lg-hover) !important;
+}
+
+.base-page > header .MuiButton-root:not(.MuiButtonGroup-root *).MuiButton-contained {
+  border-color: var(--lg-accent-border) !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-accent-fill-strong) !important;
+  background-image: var(--lg-sheen) !important;
+  box-shadow: 0 0 14px var(--lg-accent-glow) !important;
+  font-weight: 600;
+}
+
+.base-page > header .MuiIconButton-root:not(
+  .MuiIconButton-colorPrimary,
+  .MuiIconButton-colorSecondary,
+  .MuiIconButton-colorSuccess,
+  .MuiIconButton-colorWarning,
+  .MuiIconButton-colorError,
+  .MuiIconButton-colorInfo
+) {
+  color: var(--lg-text-dim) !important;
+}
+
+.base-page > header .MuiIconButton-root:hover {
+  background-color: var(--lg-hover) !important;
+}
+
+/* ============================================================
+   五、玻璃卡片（首页 / 通用 Grid 卡片）
+   ============================================================ */
+
+.base-content [class*="MuiGrid"] > .MuiBox-root,
+.base-content .MuiBox-root[aria-selected] {
+  border: 1px solid var(--lg-border) !important;
+  border-radius: var(--lg-radius) !important;
+  background-color: var(--lg-tint) !important;
+  background-image: var(--lg-sheen) !important;
+  box-shadow:
+    var(--lg-shadow),
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 var(--lg-highlight-soft),
+    inset 1px 0 0 var(--lg-highlight-soft) !important;
+}
+
+/* 包含标签页的容器本身不做玻璃，避免双层玻璃 */
+.base-content [class*="MuiGrid"] > .MuiBox-root:has([aria-selected]) {
+  border-color: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+.base-content .MuiBox-root[aria-selected="true"] {
+  border-left: 3px solid var(--lg-accent) !important;
+}
+
+.base-content [class*="MuiGrid"] > .MuiBox-root > .MuiBox-root {
+  background: transparent !important;
+}
+
+/* ============================================================
+   六、代理页：分组头 / 节点 / 延迟
+   ============================================================ */
+
+/* 分组容器（内联 padding: 4px 8px 的包裹层） */
+.base-content div[style*="padding: 4px 8px"] {
+  padding: 4px 8px !important;
+}
+
+/* 分组头卡片 */
+.base-content div[style*="padding: 4px 8px"] > .MuiListItemButton-root {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  border: 1px solid var(--lg-border) !important;
+  border-radius: var(--lg-radius) !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-tint) !important;
+  background-image: var(--lg-sheen) !important;
+  box-shadow:
+    var(--lg-shadow),
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 var(--lg-highlight-soft) !important;
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease !important;
+}
+
+.base-content div[style*="padding: 4px 8px"] > .MuiListItemButton-root:hover {
+  border-color: var(--lg-border-hover) !important;
+  background-color: var(--lg-tint-strong) !important;
+}
+
+.base-content div[style*="padding: 4px 8px"] .MuiListItemText-primary,
+.base-content div[style*="padding: 4px 8px"] .MuiListItemText-primary > span {
+  color: var(--lg-text) !important;
+  text-shadow: var(--lg-tshadow-strong);
+}
+
+.base-content div[style*="padding: 4px 8px"] .MuiListItemText-secondary,
+.base-content div[style*="padding: 4px 8px"] .MuiTypography-colorTextSecondary {
+  color: var(--lg-text-dim) !important;
+}
+
+/* 分组类型 / 当前节点 小字 */
+.base-content div[style*="padding: 4px 8px"] .MuiListItemText-secondary > .MuiBox-root > span.MuiBox-root > :first-child {
+  border-color: var(--lg-border) !important;
+  color: var(--lg-text-dim) !important;
+}
+
+.base-content div[style*="padding: 4px 8px"] .MuiIconButton-root {
+  color: var(--lg-text-dim) !important;
+  border-radius: 8px !important;
+}
+
+.base-content div[style*="padding: 4px 8px"] .MuiIconButton-root:hover {
+  color: var(--lg-text) !important;
+  background-color: var(--lg-hover) !important;
+}
+
+.base-content div[style*="padding: 4px 8px"] img[alt="group icon"] {
+  border-radius: 7px !important;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
+}
+
+/* 节点列表（ProxyItem 的 ListItem 包裹层） */
+.base-content [class*="MuiGrid"] > .MuiBox-root .MuiListItem-root,
+.base-content .MuiList-root > .MuiListItem-root {
+  width: auto !important;
+  border: 1px solid var(--lg-border-soft) !important;
+  border-radius: 12px !important;
+  background-color: var(--lg-row-bg) !important;
+  background-image: none !important;
+  overflow: hidden;
+}
+
+.base-content [class*="MuiGrid"] > .MuiBox-root .MuiListItemButton-root,
+.base-content .MuiList-root > .MuiListItem-root > .MuiListItemButton-root {
+  border-radius: 12px !important;
+  color: var(--lg-text) !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  transition: background-color 0.14s ease !important;
+}
+
+.base-content [class*="MuiGrid"] > .MuiBox-root .MuiListItemButton-root:hover,
+.base-content .MuiList-root > .MuiListItem-root > .MuiListItemButton-root:hover {
+  background-color: var(--lg-hover) !important;
+}
+
+/* 选中的节点：主色左边线 + 玻璃高亮 */
+.base-content [class*="MuiGrid"] > .MuiBox-root .MuiListItemButton-root.Mui-selected,
+.base-content .MuiList-root > .MuiListItem-root > .MuiListItemButton-root.Mui-selected {
+  border-left: 3px solid var(--lg-accent) !important;
+  background-color: var(--lg-accent-fill) !important;
+  background-image: var(--lg-sheen) !important;
+  color: var(--lg-text) !important;
+  box-shadow: 0 0 14px var(--lg-accent-glow) !important;
+}
+
+.base-content .the-check,
+.base-content .the-icon {
+  color: var(--lg-text) !important;
+}
+
+.base-content .MuiButton-text.MuiButton-sizeSmall {
+  min-width: 0 !important;
+  color: var(--lg-text-dim) !important;
+  background: transparent !important;
+}
+
+.base-content .MuiButton-text.MuiButton-sizeSmall:hover {
+  color: var(--lg-text) !important;
+  background-color: var(--lg-hover) !important;
+}
+
+/* ============================================================
+   七、列表 / 折叠面板 / 小标题（订阅、设置、规则、日志等）
+   ============================================================ */
+
+.base-content .MuiListItemButton-root,
+.base-content .MuiAccordion-root,
+.base-content .MuiAccordionSummary-root {
+  border-radius: var(--lg-radius-sm) !important;
+  color: var(--lg-text) !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+.base-content .MuiListItemButton-root:hover {
+  background-color: var(--lg-hover) !important;
+}
+
+.base-content .MuiListItemText-primary,
+.base-content .MuiListSubheader-root {
+  color: var(--lg-text) !important;
+  background-color: transparent !important;
+}
+
+.base-content .MuiListItemText-secondary {
+  color: var(--lg-text-dim) !important;
+}
+
+.base-content .MuiListSubheader-root {
+  margin-bottom: 3px !important;
+  line-height: 2.2 !important;
+  text-shadow: var(--lg-tshadow-strong);
+}
+
+.base-content .MuiTypography-caption {
+  background-color: transparent !important;
+}
+
+/* 设置页分组小卡片（MuiPaper 包裹的 Stack） */
+.base-content > .MuiGrid-container > .MuiGrid-root
+  > .MuiBox-root .MuiStack-root
+  > .MuiPaper-root {
+  border: 1px solid var(--lg-border-soft) !important;
+  border-radius: var(--lg-radius-sm) !important;
+  background-color: var(--lg-row-bg) !important;
+  background-image: none !important;
+  color: var(--lg-text) !important;
+  box-shadow: none !important;
+}
+
+.base-content > .MuiGrid-container > .MuiGrid-root
+  > .MuiBox-root .MuiStack-root
+  > .MuiPaper-root:hover {
+  background-color: var(--lg-hover) !important;
+}
+
+.base-content > .MuiGrid-container > .MuiGrid-root
+  > .MuiBox-root .MuiStack-root
+  > .MuiPaper-root
+  > .MuiTypography-root {
+  color: inherit !important;
+}
+
+/* 状态小面板（延迟测试卡片等）的指示条 */
+.base-content > .MuiGrid-container > .MuiGrid-root
+  > .MuiBox-root .MuiStack-root
+  > .MuiPaper-root::after {
+  width: 56% !important;
+  height: 3px !important;
+  left: 22% !important;
+  bottom: 0 !important;
+  transform: none !important;
+  border-radius: 3px 3px 0 0 !important;
+  background-color: var(--lg-accent) !important;
+}
+
+/* 卡片内的子面板（IP 信息、系统信息等 MuiCard） */
+.base-content [class*="MuiGrid"] > .MuiCard-root {
+  background-color: var(--lg-row-bg) !important;
+  background-image: none !important;
+  border: 1px solid var(--lg-border-soft) !important;
+  border-radius: var(--lg-radius-sm) !important;
+  box-shadow: none !important;
+}
+
+/* 滚动区吸顶行（连接页表头等） */
+.base-content div[style*="position: sticky"] > div[style*="display: flex"] {
+  background-color: var(--lg-sticky-bg) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom-color: var(--lg-border-soft) !important;
+}
+
+.base-content .MuiTableCell-head {
+  background-color: var(--lg-sticky-bg) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--lg-text) !important;
+  border-bottom: 1px solid var(--lg-border-soft) !important;
+}
+
+.base-content .MuiTableCell-root {
+  color: var(--lg-text) !important;
+  border-bottom: 1px solid var(--lg-border-soft) !important;
+}
+
+.base-content .MuiTableRow-root:hover .MuiTableCell-root {
+  background-color: var(--lg-hover) !important;
+}
+
+/* ============================================================
+   八、按钮 / 开关 / 输入框 / 滑块 / Chip
+   ============================================================ */
+
+.base-content .MuiButtonGroup-root {
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+
+.base-content .MuiButtonGroup-root .MuiButton-root {
+  border-color: var(--lg-border-soft) !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+.base-content .MuiButtonGroup-root .MuiButton-contained {
+  color: var(--lg-text) !important;
+  font-weight: 600 !important;
+  background-color: var(--lg-active) !important;
+  text-shadow: none !important;
+}
+
+.base-content .MuiButton-root.MuiButton-contained {
+  border: 1px solid var(--lg-accent-border) !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-accent-fill-strong) !important;
+  background-image: var(--lg-sheen) !important;
+  box-shadow:
+    0 4px 14px var(--lg-accent-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
+.base-content .MuiButton-root.MuiButton-outlined {
+  border: 1px solid var(--lg-border) !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-tint) !important;
+  background-image: var(--lg-sheen) !important;
+}
+
+body .MuiIconButton-root {
+  color: var(--lg-text-dim);
+}
+
+body .MuiSwitch-track {
+  border: 1px solid var(--lg-border-soft) !important;
+  background-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+body .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
+  background-color: var(--lg-accent-fill-strong) !important;
+  border-color: var(--lg-accent-border) !important;
+}
+
+body .MuiSwitch-thumb {
+  background-image: linear-gradient(145deg, #ffffff 0%, #c9d4e6 100%) !important;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+body .MuiOutlinedInput-root,
+body .MuiFilledInput-root {
+  color: var(--lg-text) !important;
+  border-radius: var(--lg-radius-sm) !important;
+  background-color: var(--lg-input-bg) !important;
+  text-shadow: none;
+}
+
+body .MuiSelect-select {
+  color: var(--lg-text) !important;
+  background-color: transparent !important;
+}
+
+body .MuiSelect-icon,
+body .MuiSvgIcon-root {
+  color: inherit;
+}
+
+body .MuiOutlinedInput-notchedOutline {
+  border-color: var(--lg-border-soft) !important;
+}
+
+body .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline,
+body .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--lg-accent-border) !important;
+}
+
+body .MuiOutlinedInput-root.Mui-focused {
+  box-shadow: 0 0 0 3px var(--lg-accent-glow) !important;
+}
+
+body .MuiInputLabel-root,
+body .MuiFormHelperText-root {
+  color: var(--lg-text-dim) !important;
+  text-shadow: none;
+}
+
+body .MuiSlider-rail {
+  background-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+body .MuiSlider-track {
+  background-color: var(--lg-accent) !important;
+}
+
+body .MuiSlider-thumb {
+  background-image: linear-gradient(145deg, #ffffff 0%, #c9d4e6 100%) !important;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Chip：统一玻璃胶囊，语义色单独覆盖 */
+body .MuiChip-root {
+  border: 1px solid var(--lg-border-soft) !important;
+  border-radius: 999px !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-chip-bg) !important;
+  background-image: none !important;
+  text-shadow: none !important;
+}
+
+body .MuiChip-root.MuiChip-colorPrimary {
+  border-color: var(--lg-accent-border) !important;
+  color: var(--lg-accent-text) !important;
+  background-color: var(--lg-accent-fill) !important;
+}
+
+body .MuiChip-root.MuiChip-colorSuccess,
+body .MuiChip-root.MuiChip-filled.MuiChip-colorSuccess {
+  border: 1px solid var(--lg-success) !important;
+  color: var(--lg-success) !important;
+  background-color: var(--lg-success-soft) !important;
+}
+
+body .MuiChip-root.MuiChip-colorWarning,
+body .MuiChip-root.MuiChip-filled.MuiChip-colorWarning {
+  border: 1px solid var(--lg-warning) !important;
+  color: var(--lg-warning) !important;
+  background-color: var(--lg-warning-soft) !important;
+}
+
+body .MuiChip-root.MuiChip-colorError,
+body .MuiChip-root.MuiChip-filled.MuiChip-colorError {
+  border: 1px solid var(--lg-error) !important;
+  color: var(--lg-error) !important;
+  background-color: var(--lg-error-soft) !important;
+}
+
+body .MuiChip-root.MuiChip-colorSuccess .MuiChip-icon,
+body .MuiChip-root.MuiChip-colorSuccess .MuiChip-label,
+body .MuiChip-root.MuiChip-colorWarning .MuiChip-icon,
+body .MuiChip-root.MuiChip-colorWarning .MuiChip-label,
+body .MuiChip-root.MuiChip-colorError .MuiChip-icon,
+body .MuiChip-root.MuiChip-colorError .MuiChip-label {
+  color: inherit !important;
+}
+
+body .MuiDivider-root {
+  border-color: var(--lg-border-soft) !important;
+}
+
+body .MuiTabs-root {
+  background-color: transparent !important;
+}
+
+body .MuiTab-root {
+  color: var(--lg-text-dim) !important;
+}
+
+body .MuiTab-root.Mui-selected {
+  color: var(--lg-text) !important;
+  text-shadow: var(--lg-tshadow);
+}
+
+body .MuiTabs-indicator {
+  background-color: var(--lg-accent) !important;
+}
+
+/* ============================================================
+   九、浮层：对话框 / 菜单 / 气泡 / 通知
+   ============================================================ */
+
+body .MuiDialog-paper.MuiPaper-root,
+body .MuiPopover-paper.MuiPaper-root,
+body .MuiMenu-paper.MuiPaper-root {
+  border: 1px solid var(--lg-border) !important;
+  border-radius: var(--lg-radius) !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-overlay-tint) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(var(--lg-overlay-blur)) saturate(1.5);
+  backdrop-filter: blur(var(--lg-overlay-blur)) saturate(1.5);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 var(--lg-highlight) !important;
+  text-shadow: none;
+}
+
+body .MuiDialog-paper *,
+body .MuiPopover-paper *,
+body .MuiMenu-paper * {
+  text-shadow: none;
+}
+
+/* 对话框内的列表行 */
+body .MuiDialog-paper .MuiListItem-root {
+  border: 1px solid var(--lg-border-soft) !important;
+  border-radius: var(--lg-radius-sm) !important;
+  background-color: var(--lg-row-bg) !important;
+  background-image: none !important;
+}
+
+body .MuiDialog-paper .MuiListItem-root:hover {
+  background-color: var(--lg-hover) !important;
+  border-color: var(--lg-border-hover) !important;
+}
+
+body .MuiBackdrop-root {
+  background-color: var(--lg-backdrop) !important;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+body .MuiMenuItem-root:hover,
+body .MuiMenuItem-root.Mui-selected {
+  background-color: var(--lg-hover) !important;
+}
+
+body .MuiTooltip-tooltip {
+  border: 1px solid var(--lg-border-soft) !important;
+  border-radius: 8px !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-tooltip-bg) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--lg-shadow-soft) !important;
+  text-shadow: none;
+}
+
+/* 通知条 */
+body .MuiAlert-standardSuccess {
+  border: 1px solid var(--lg-success) !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-success-soft) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-radius: var(--lg-radius-sm) !important;
+}
+
+body .MuiAlert-standardWarning {
+  border: 1px solid var(--lg-warning) !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-warning-soft) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-radius: var(--lg-radius-sm) !important;
+}
+
+body .MuiAlert-standardError {
+  border: 1px solid var(--lg-error) !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-error-soft) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-radius: var(--lg-radius-sm) !important;
+}
+
+body .MuiAlert-standardInfo {
+  border: 1px solid var(--lg-accent-border) !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-accent-fill) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-radius: var(--lg-radius-sm) !important;
+}
+
+body .MuiAlert-icon {
+  color: inherit !important;
+}
+
+body .MuiSnackbarContent-root.MuiPaper-root {
+  border: 1px solid var(--lg-border-soft) !important;
+  border-radius: var(--lg-radius-sm) !important;
+  color: var(--lg-text) !important;
+  background-color: var(--lg-overlay-tint) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 var(--lg-highlight-soft) !important;
+}
+
+/* ============================================================
+   十、状态与细节
+   ============================================================ */
+
+/* 禁用态 */
+.base-page > header .MuiButtonBase-root.Mui-disabled,
+.base-content .MuiButtonBase-root.Mui-disabled,
+.base-content .MuiInputBase-root.Mui-disabled,
+.the-menu .MuiButtonBase-root.Mui-disabled,
+body .MuiDialog-root .MuiButtonBase-root.Mui-disabled,
+body .MuiPopover-root .MuiButtonBase-root.Mui-disabled,
+body .MuiInputLabel-root.Mui-disabled,
+body .MuiFormHelperText-root.Mui-disabled {
+  opacity: 0.42 !important;
+}
+
+.base-content .MuiButtonBase-root.Mui-disabled,
+.the-menu .MuiButtonBase-root.Mui-disabled {
+  pointer-events: none !important;
+}
+
+/* 错误态 */
+body .MuiFormHelperText-root.Mui-error,
+body .MuiInputLabel-root.Mui-error {
+  color: var(--lg-error) !important;
+}
+
+body .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+  border-color: var(--lg-error) !important;
+}
+
+/* 键盘焦点环 */
+.base-page > header .MuiButtonBase-root.Mui-focusVisible,
+.base-content .MuiButtonBase-root.Mui-focusVisible,
+.the-menu .MuiButtonBase-root.Mui-focusVisible,
+body .MuiDialog-root .MuiButtonBase-root.Mui-focusVisible,
+body .MuiPopover-root .MuiButtonBase-root.Mui-focusVisible {
+  box-shadow: inset 0 0 0 2px var(--lg-accent) !important;
+}
+
+/* 滚动条 */
+body * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--lg-scrollbar) transparent;
+}
+
+body *::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  background: transparent !important;
+}
+
+body *::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+body *::-webkit-scrollbar-thumb {
+  border-radius: 999px !important;
+  background: var(--lg-scrollbar) !important;
+}
+
+body *::-webkit-scrollbar-thumb:hover {
+  background: var(--lg-scrollbar-hover) !important;
+}
+
+/* 减少动态效果：关闭过渡与色斑流动 */
+@media (prefers-reduced-motion: reduce) {
+  .layout *,
+  .layout *::before,
+  .layout *::after,
+  body::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
