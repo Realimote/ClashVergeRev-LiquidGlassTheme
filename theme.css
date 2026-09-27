@@ -34,25 +34,28 @@
   --lg-blob-blur: 64px;
   --lg-blob-motion: 44s; /* 流动周期 */
 
-  /* ───────────── 玻璃材质 ───────────── */
-  --lg-tint: rgba(255, 255, 255, 0.065);
-  --lg-tint-strong: rgba(255, 255, 255, 0.1);
-  --lg-row-bg: rgba(255, 255, 255, 0.045);
-  --lg-hover: rgba(255, 255, 255, 0.1);
-  --lg-active: rgba(255, 255, 255, 0.16);
-  /* 对角高光：模拟玻璃表面反光 */
+  /* ───────────── 玻璃材质 ─────────────
+     透明度：这些数值是"玻璃染色的浓度"，越小 → 面板越透、下方壁纸透出越多。
+     想再透一档就整体下调 ~30%；调到 0.02 附近基本只剩一层轮廓。
+     注意：调得过低时深色壁纸会让文字对比度下降，可同步调大 --lg-scrim-* 补偿 */
+  --lg-tint: rgba(255, 255, 255, 0.03);
+  --lg-tint-strong: rgba(255, 255, 255, 0.055);
+  --lg-row-bg: rgba(255, 255, 255, 0.022);
+  --lg-hover: rgba(255, 255, 255, 0.075);
+  --lg-active: rgba(255, 255, 255, 0.11);
+  /* 对角高光：模拟玻璃表面反光（浓度同样跟随整体透明度） */
   --lg-sheen: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.16) 0%,
-    rgba(255, 255, 255, 0.05) 40%,
-    rgba(255, 255, 255, 0.015) 100%
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.028) 40%,
+    rgba(255, 255, 255, 0.008) 100%
   );
-  --lg-highlight: rgba(255, 255, 255, 0.28);
-  --lg-highlight-soft: rgba(255, 255, 255, 0.07);
+  --lg-highlight: rgba(255, 255, 255, 0.2);
+  --lg-highlight-soft: rgba(255, 255, 255, 0.045);
 
-  --lg-border: rgba(255, 255, 255, 0.2);
-  --lg-border-soft: rgba(255, 255, 255, 0.11);
-  --lg-border-hover: rgba(255, 255, 255, 0.34);
+  --lg-border: rgba(255, 255, 255, 0.16);
+  --lg-border-soft: rgba(255, 255, 255, 0.09);
+  --lg-border-hover: rgba(255, 255, 255, 0.28);
 
   --lg-radius: 18px;
   --lg-radius-sm: 12px;
@@ -90,15 +93,16 @@
   --lg-error-soft: rgba(255, 107, 128, 0.16);
 
   /* ───────────── 控件 ───────────── */
-  --lg-input-bg: rgba(6, 10, 20, 0.34);
-  --lg-chip-bg: rgba(255, 255, 255, 0.1);
-  --lg-sticky-bg: rgba(9, 13, 22, 0.55);
+  --lg-input-bg: rgba(6, 10, 20, 0.2);
+  --lg-chip-bg: rgba(255, 255, 255, 0.07);
+  --lg-sticky-bg: rgba(9, 13, 22, 0.4);
 
-  /* ───────────── 浮层（对话框 / 菜单 / 气泡） ───────────── */
-  --lg-overlay-tint: rgba(13, 17, 29, 0.72);
+  /* ───────────── 浮层（对话框 / 菜单 / 气泡） ─────────────
+     浮层有大面积 backdrop-filter，染色可以放得很低 */
+  --lg-overlay-tint: rgba(13, 17, 29, 0.55);
   --lg-overlay-blur: 28px;
-  --lg-backdrop: rgba(4, 7, 14, 0.42);
-  --lg-tooltip-bg: rgba(10, 13, 22, 0.92);
+  --lg-backdrop: rgba(4, 7, 14, 0.3);
+  --lg-tooltip-bg: rgba(10, 13, 22, 0.78);
 
   --lg-scrollbar: rgba(255, 255, 255, 0.22);
   --lg-scrollbar-hover: rgba(255, 255, 255, 0.36);
@@ -458,7 +462,8 @@ body::after {
   background-color: var(--lg-hover) !important;
 }
 
-.base-content div[style*="padding: 4px 8px"] img[alt="group icon"] {
+/* 分组图标：v2.5.6 起 alt 改为 group.name，改用 width 属性定位 */
+.base-content div[style*="padding: 4px 8px"] img[width="32px"] {
   border-radius: 7px !important;
   filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
 }
